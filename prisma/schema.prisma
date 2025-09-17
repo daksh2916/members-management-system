@@ -12,3 +12,99 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Member {
+  id             String          @id @default(uuid())
+  name           String
+  mobile         String          @unique
+  email          String          @unique
+  profilePicUrl  String?         // stored in S3
+  pan            String?         @unique
+  panPhotoUrl    String?
+  aadhar         String?         @unique
+  aadharPhotoUrl String?
+  passport       String?         
+  nationality    String?
+  birthdate      DateTime?
+  marriageDate   DateTime?
+  address        String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  membership     MembershipInfo?
+  businessInfo   BusinessInfo?
+  bankingInfo    BankingInfo?
+  events         MemberEvent[]
+
+  @@index([createdAt])
+}
+
+model MembershipInfo {
+  id                String   @id @default(uuid())
+  memberId          String   @unique
+  code              String   @unique
+  type              MembershipType
+  registrationDate  DateTime
+  validity          DateTime
+  amount            Float
+
+  member            Member   @relation(fields: [memberId], references: [id])
+  @@index([type])
+}
+
+model BusinessInfo {
+  id              String   @id @default(uuid())
+  memberId        String   @unique
+  companyName     String
+  website         String?
+  category        String
+  designation     String
+
+  member          Member   @relation(fields: [memberId], references: [id])
+}
+
+model BankingInfo {
+  id              String   @id @default(uuid())
+  memberId        String   @unique
+  accountNumber   String
+  bankName        String
+  bankBranch      String
+  ifscCode        String
+  chequeAmount    Float?
+  rtgsNumber      String?
+  chequeNumber    String?
+
+  member          Member   @relation(fields: [memberId], references: [id])
+}
+
+model Event {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  location    String
+  date        DateTime
+  totalSlots  Int
+
+  members     MemberEvent[]
+  createdAt   DateTime      @default(now())
+
+  @@index([date])
+}
+
+model MemberEvent {
+  id        String   @id @default(uuid())
+  memberId  String
+  eventId   String
+  member    Member   @relation(fields: [memberId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id])
+
+  @@unique([memberId, eventId])
+  @@index([memberId])
+  @@index([eventId])
+}
+
+enum MembershipType {
+  GOLD
+  PLATINUM
+  TITANIUM
+}
