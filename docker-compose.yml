@@ -13,6 +13,11 @@ services:
       DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/solis-backend?schema=public"
       REDIS_URL: "redis://redis:6379"
       PRISMA_CLIENT_ENGINE_TYPE: "binary"
+      AWS_S3_BUCKET_NAME: "your-s3-bucket-name"
+      AWS_REGION: "your-aws-region"
+      AWS_ACCESS_KEY_ID: "your-access-key-id"
+      AWS_SECRET_ACCESS_KEY: "your-secret-access-key"
+      
   postgres:
     image: postgres:15
     container_name: postgres_db
