@@ -37,7 +37,7 @@ Instead of manually running `npm install` and `npm run start`, you can build and
 
 ---
 
-## Docker Setup for S3 Credentials
+### Docker Setup for S3 Credentials
 
 To integrate **Amazon S3** for file storage (profilePic, panPhoto, aadharPhoto), follow these steps:
 
@@ -83,7 +83,7 @@ All endpoints use **Joi** to validate request bodies. If required fields are mis
 
 ---
 
-# 🏛 Solis Backend API Documentation
+
 
 ## API Endpoints
 
