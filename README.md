@@ -50,6 +50,7 @@ AWS_REGION=your-region
 AWS_BUCKET_NAME=your-bucket-name
 
 > Docker ensures all services start consistently with the correct environment.
+```
 
 ---
 
