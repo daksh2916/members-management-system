@@ -26,6 +26,7 @@
     "@nestjs/platform-express": "^11.1.6",
     "@prisma/client": "^6.16.2",
     "dotenv": "^17.2.2",
+    "joi": "^18.0.1",
     "multer": "^2.0.2",
     "redis": "^5.8.2",
     "reflect-metadata": "^0.2.2",

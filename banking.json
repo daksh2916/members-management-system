@@ -1,0 +1,9 @@
+{
+  "accountNumber": "123456789013",
+  "bankName": "International Bank",
+  "bankBranch": "Noida Branch",
+  "ifscCode": "NBIN0001236",
+  "chequeAmount": 5000.00,
+  "rtgsNumber": "RTGS123456",
+  "chequeNumber": "CHQ987654"
+}

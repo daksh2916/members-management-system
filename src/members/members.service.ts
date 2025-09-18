@@ -21,8 +21,8 @@ export class MembersService {
 
   async savePersonalWithFiles(
     draftId: string, 
-    dto: any, 
-    files: { profilePic?: Express.Multer.File[], panPhoto?: Express.Multer.File[], aadharPhoto?: Express.Multer.File[] }
+    dto: any,  
+   files: { profilePic?: Express.Multer.File[], panPhoto?: Express.Multer.File[], aadharPhoto?: Express.Multer.File[] } = {}
   ) {
     const key = `member:draft:${draftId}`;
     const existing = await this.redis.get(key);

@@ -1,18 +1,22 @@
-// src/members/members.controller.ts
-import { 
-  Controller, 
-  Post, 
-  Get, 
-  Patch, 
-  Delete, 
-  Body, 
-  Param, 
-  Query,
-  UploadedFiles,
-  UseInterceptors
+import {
+    Controller,
+    Post,
+    Get,
+    Patch,
+    Delete,
+    Body,
+    Param,
+    Query,
+    UploadedFiles,
+    UseInterceptors
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { MembersService } from './members.service';
+import { JoiValidationPipe } from '../common/joi-validation.pipe';
+import { personalSchema } from './schemas/personal.schema';
+import { membershipSchema } from './schemas/membership.schema';
+import { businessSchema } from './schemas/business.schema';
+import { bankingSchema } from './schemas/banking.schema';
 
 @Controller('members')
 export class MembersController {
@@ -30,25 +34,34 @@ export class MembersController {
         { name: 'aadharPhoto', maxCount: 1 }
     ]))
     async savePersonal(
-        @Param('draftId') draftId: string, 
-        @Body() dto: any,
+        @Param('draftId') draftId: string,
+        @Body(new JoiValidationPipe(personalSchema)) dto: any,
         @UploadedFiles() files: { profilePic?: Express.Multer.File[], panPhoto?: Express.Multer.File[], aadharPhoto?: Express.Multer.File[] }
     ) {
         return this.membersService.savePersonalWithFiles(draftId, dto, files);
     }
 
     @Post(':draftId/membership')
-    async saveMembership(@Param('draftId') draftId: string, @Body() dto: any) {
+    async saveMembership(
+        @Param('draftId') draftId: string,
+        @Body(new JoiValidationPipe(membershipSchema)) dto: any
+    ) {
         return this.membersService.saveStep(draftId, 'membership', dto);
     }
 
     @Post(':draftId/business')
-    async saveBusiness(@Param('draftId') draftId: string, @Body() dto: any) {
+    async saveBusiness(
+        @Param('draftId') draftId: string,
+        @Body(new JoiValidationPipe(businessSchema)) dto: any
+    ) {
         return this.membersService.saveStep(draftId, 'business', dto);
     }
 
     @Post(':draftId/banking')
-    async saveBanking(@Param('draftId') draftId: string, @Body() dto: any) {
+    async saveBanking(
+        @Param('draftId') draftId: string,
+        @Body(new JoiValidationPipe(bankingSchema)) dto: any
+    ) {
         return this.membersService.saveStep(draftId, 'banking', dto);
     }
 
@@ -67,10 +80,10 @@ export class MembersController {
         return this.membersService.getMemberById(id);
     }
 
-    @Patch(':id')
-    async updateMember(@Param('id') id: string, @Body() dto: any) {
-        return this.membersService.updateMember(id, dto);
-    }
+    // @Patch(':id')
+    // async updateMember(@Param('id') id: string, @Body() dto: any) {
+    //     return this.membersService.updateMember(id, dto);
+    // }
 
     @Delete(':id')
     async deleteMember(@Param('id') id: string) {

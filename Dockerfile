@@ -7,6 +7,9 @@ WORKDIR /usr/src/app
 # Copy package.json first for caching
 COPY package*.json ./
 
+# Install glibc & OpenSSL required for Prisma
+RUN apk add --no-cache bash libc6-compat openssl
+
 # Install dependencies
 RUN npm install
 

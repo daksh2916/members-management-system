@@ -6,12 +6,13 @@ services:
       - "3000:3000"
     volumes:
       - .:/usr/src/app
-    command: npm run start:dev
+    command: npm run start
     depends_on:
       - postgres
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/solis-backend?schema=public"
-
+      REDIS_URL: "redis://redis:6379"
+      PRISMA_CLIENT_ENGINE_TYPE: "binary"
   postgres:
     image: postgres:15
     container_name: postgres_db
