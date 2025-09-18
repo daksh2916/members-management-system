@@ -1,98 +1,122 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🏛 Solis Backend API Documentation
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Project Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Solis Backend is a **NestJS** application for **membership and event management**.
 
-## Description
+It supports:
+- Multi-step member creation: personal → membership → business → banking.
+- Temporary storage of draft data using **Redis**.
+- Final storage in **PostgreSQL**.
+- Event creation and member registration.
+- Validation, authentication, and authorization.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## 🛠 Project Setup with Docker
 
-```bash
-$ npm install
-```
+Instead of manually running `npm install` and `npm run start`, you can build and run the project using **Docker Compose**:
 
-## Compile and run the project
+### Docker Compose Setup
 
-```bash
-# development
-$ npm run start
+1. Build all services (Postgres, Redis, NestJS app):
 
-# watch mode
-$ npm run start:dev
+    ```bash
+    docker compose build
+    ```
 
-# production mode
-$ npm run start:prod
-```
+2. Start all services in detached mode:
 
-## Run tests
+    ```bash
+    docker compose up -d
+    ```
 
-```bash
-# unit tests
-$ npm run test
+- **Backend URL:** [http://localhost:3000](http://localhost:3000/)
+- **Redis:** Port 6379
+- **Postgres:** Port 5432
 
-# e2e tests
-$ npm run test:e2e
+---
 
-# test coverage
-$ npm run test:cov
-```
+## Docker Setup for S3 Credentials
 
-## Deployment
+To integrate **Amazon S3** for file storage (profilePic, panPhoto, aadharPhoto), follow these steps:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+1. Create a `.env` file in your project root with the following AWS credentials:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+```env
+AWS_ACCESS_KEY_ID=your-aws-access-key-id
+AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key
+AWS_REGION=your-region
+AWS_BUCKET_NAME=your-bucket-name
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+> Docker ensures all services start consistently with the correct environment.
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 🗄 Database Schema Overview
 
-Check out a few resources that may come in handy when working with NestJS:
+### Member
+- Stores personal information like name, mobile, email, etc.
+- Related tables: `MembershipInfo`, `BusinessInfo`, `BankingInfo`, `MemberEvent`.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### MembershipInfo
+- Stores membership details like type (GOLD, PLATINUM, TITANIUM), registration date, validity, etc.
+- Linked to a **Member** via `memberId`.
 
-## Support
+### BusinessInfo
+- Stores business-related information like company name, category, designation, etc.
+- Linked to a **Member** via `memberId`.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### BankingInfo
+- Stores banking details like account number, bank name, IFSC code, etc.
+- Linked to a **Member** via `memberId`.
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 🔑 API Endpoints
 
-## License
+All endpoints require `Content-Type: application/json`.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### **Joi Validation**
+
+All endpoints use **Joi** to validate request bodies. If required fields are missing or data is invalid, you will receive a **400 Bad Request** error with a descriptive message.
+
+---
+
+# 🏛 Solis Backend API Documentation
+
+## API Endpoints
+
+### 1. **Start Member Draft**
+**POST** `/members/start`
+
+### 2. **Save Personal Info**
+**POST** `/members/:draftId/personal`
+
+### 3. **Save Membership Info**
+**POST** `/members/:draftId/membership`
+
+### 4. **Save Business Info**
+**POST** `/members/:draftId/business`
+
+### 5. **Save Banking Info**
+**POST** `/members/:draftId/banking`
+
+### 6. **Complete Member Draft**
+**POST** `/members/:draftId/complete`
+
+### 7. **Get All Members**
+**GET** `/members`
+
+### 8. **Get Members by Membership Type**
+**GET** `/members?type=GOLD`
+
+### 9. **Events API**
+- **Get Upcoming Events:** `/events/upcoming`
+- **Get Current Events:** `/events/current`
+- **Create Event:** `/events` (POST JSON body)
+- **Get All Events:** `/events`
+- **Get Event by ID:** `/events/:eventId`
+- **Add Member to Event:** `/events/:eventId/add-member/:memberId`
+
+
